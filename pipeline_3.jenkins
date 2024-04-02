@@ -9,22 +9,19 @@ pipeline {
         }
       }
       stage('List') {
-        steps{      
-          bat("dir /B ${JENKINS_HOME}")
+        steps {
+          bat("dir /B %JENKINS_HOME%")
         }
-
-
+      }
+      stage('Test') {
+        steps {
+          echo 'Testing...'
         }
-
-   stage('Test') {
-     steps {
-        echo 'Testing...'
-     }
+      }
+      stage('Deploy') {
+        steps {
+          echo 'Deploying...'
+        }
+      }
    }
-   stage('Deploy') {
-     steps {
-       echo 'Deploying...'
-     }
-   }
-  }
-} 
+}
