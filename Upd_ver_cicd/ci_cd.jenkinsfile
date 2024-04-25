@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        user_name = 'Oleksandra'
+        user_email = 'bluckyalex1@gmail.com'
+    }
+
+    stages {
+        stage('Set Git Configuration') {
+            steps {
+                sh "git config user.name '${user_name}'"
+                sh "git config user.email '${user_email}'"
+            }
+        }
+
+        stage('Checkout Dev') {
+            steps {
+                git branch: 'dev', url: 'https://github.com/Alexis-IT/ci-cd-dq-my/'
+            }
+        }
+
+        stage('Create Virtual Environment') {
+            steps {
+                // Create a virtual environment
+                sh 'python3 -m venv venv'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                // Install dependencies from requirements.txt within the virtual environment
+                sh './venv/bin/python3 -m pip install -r requirements.txt'
+            }
+        }
+
+        stage('Testing') {
+            steps {
+                sh './venv/bin/python3 -m pytest test_cases.py'
+            }
+        }
+
+        stage('Merge into Main') {
+            steps {
+                // Switch to the main branch
+                sh 'git checkout main'
+                // Merge feature branch into main
+                sh 'git merge new_feature'
+            }
+        }
+    }
+}
